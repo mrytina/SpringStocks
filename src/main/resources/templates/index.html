@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Stocks</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h4 class="text-primary">STOCKS</h4>
+        </div>
+        <form class="form-horizontal">
+            <code>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>URL</th>
+                            <th>Description</th>
+                            <th>Example URL</th>
+                            <th>Example JSON</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>GET</td>
+                            <td>/stocks[id | symbol | name | market | currency | country | status]</td>
+                            <td>Searchs stock for the match of the query parameter passed, the query parameters are optional</td>
+                            <td>/stocks?id=1&amp;currency=USD</td>
+                            <td>--</td>
+                        </tr>
+                        <tr>
+                            <td>GET</td>
+                            <td>/stocks/{search}</td>
+                            <td>Searches stocks for 'search' text that matches the columns id, symbol, name, market, currency, country, status</td>
+                            <td>/stocks/as</td>
+                            <td>--</td>
+                        </tr>
+                        <tr>
+                            <td>POST</td>
+                            <td>/stocks</td>
+                            <td>Creates a new record will return the new record or empty. Returns a validation error if there is one. The id, created, and updated are always ignored.</td>
+                            <td>/stocks</td>
+                            <td>{
+                                "symbol": "test",
+                                "name": "Test Inc.",
+                                "market": "NMS",
+                                "currency": "USD",
+                                "country": "USA",
+                                "status": "active",
+                                }</td>
+                        </tr>
+                        <tr>
+                            <td>PUT</td>
+                            <td>/stocks/{id}</td>
+                            <td>Updates a record by id. Returns a validation error if there is one. Note will not update created and updated columns even if passed.</td>
+                            <td>/stocks/1</td>
+                            <td>{
+                                "symbol": "test aapl",
+                                "name": "Test Apple Inc.",
+                                "market": "NMS",
+                                "currency": "USD",
+                                "country": "USA",
+                                "status": "active",
+                                }</td>
+                        </tr>
+                        <tr>
+                            <td>DELETE</td>
+                            <td>/stocks/{id}</td>
+                            <td>Deletes a record by id. Will return the stock if it was deleted otherwise returns no record.</td>
+                            <td>/stocks/1</td>
+                            <td>--</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </code>
+            <div class="form-group">
+                <label class="col-sm-3 form-label">Method</label>
+                <div class="col-sm-3">
+                    <select id="method" name="method" type="text" class="form-control">
+                        <option>GET</option>
+                        <option>POST</option>
+                        <option>PUT</option>
+                        <option>DELETE</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 form-label">URL</label>
+                <div class="col-sm-9">
+                    <input id="url" name="url" type="text" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 form-label">JSON</label>
+                <div class="col-sm-9">
+                    <div id="json" name="json" class="form-control" style="height: 300px"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 form-label">Results</label>
+                <div class="col-sm-9">
+                    <div id="results" name="results" class="form-control" style="height: 300px"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="button" id="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/ace/1.2.3/min/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("json");
+    editor.getSession().setMode("ace/mode/javascript");
+    editor.$blockScrolling = Infinity;
+
+    var viewer = ace.edit("results");
+    viewer.getSession().setMode("ace/mode/javascript");
+    viewer.getSession().setUseWrapMode(true);
+    viewer.setReadOnly(true);
+    viewer.$blockScrolling = Infinity;
+</script>
+<script type="application/javascript">
+    document.getElementById("submit").addEventListener("click", function(event){
+        var method = document.getElementById("method").value;
+        var url = document.getElementById("url").value;
+        var json = editor.getValue();
+        var ajaxRequest = {
+            type: method,
+            url: url,
+            contentType: "application/json",
+            success: function(data){
+                viewer.setValue(JSON.stringify(data, null, "\t"));
+            },
+            error: function(error){
+                viewer.setValue(JSON.stringify(error.responseJSON, null, "\t"));
+            }
+        };
+        if (method !== "GET") {
+            ajaxRequest.data = json;
+        }
+
+        $.ajax(ajaxRequest);
+    });
+</script>
+</body>
+</html>
