@@ -16,5 +16,5 @@ Instructions
 9. Open a command prompt navigate to this projects pom.xml
 10. Type "mvn spring-boot:run"
 11. Go to localhost:8090
-12. For swagger type swagger-ui.html
-13. You can change the database settings in the application.properties under src/main/resources
+12. For swagger got to localhost:8090/swagger-ui.html
+13. You can change the projects database settings in the application.properties under src/main/resources
