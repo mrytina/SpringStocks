@@ -1,4 +1,10 @@
-Instructions
+Live Host
+-
+* Home page [link](https://mariela.herokuapp.com/)
+* For swagger use this [link](https://mariela.herokuapp.com/swagger-ui.html)
+
+
+Local Setup Instructions
 -
 1. [Download](http://www.oracle.com/technetwork/java/javase/downloads/index.html) and install the Java 8 sdk
 2. Set the ['JAVA_HOME'](https://docs.oracle.com/cd/E19509-01/820-3208/inst_cli_jdk_javahome_t/) environmental variable on your system to point to your Java 8 sdk
@@ -14,6 +20,7 @@ Instructions
 		* Once the guide has been completed and your connected to the PostgresSQL command line run 'CREATE DATABASE StockMarket;'
 8. Download and unzip this project
 9. Open a command prompt navigate to this projects pom.xml
+10. Type "mvn install"
 10. Type "mvn spring-boot:run"
 11. Go to localhost:8090
 12. For swagger go to localhost:8090/swagger-ui.html
